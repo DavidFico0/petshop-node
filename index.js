@@ -52,7 +52,7 @@ const server = http.createServer((req, res)=> {
         let petsEncontrados = petshop.buscarPet(nomePet);
         if (petsEncontrados.length > 0) {
           res.write(
-            `<a href='/'>Home</a> | <a href='/pets'>Lista pets</a> | <a href='/pets/adicionar'>Adicionar Pet</a> | <a href='/pets/buscapets'>Buscar pets</a><p>Encontramos ${petsEncontrados.length} pets com o nome ${nomePet}</p><p>Nome: ${nomePet}</p><p>Idade:${petsEncontrados[0].idade}</p><p>Vacinado: ${petsEncontrados[0].vacinado == 'true' ? 'S' : 'N' }</p><h1>**Servicos disponiveis**</h1><p><form method='GET' action='/pets/servicos'><input type="checkbox" name="servico[]" value="Banho">Banho <input type="checkbox" name="servico[]" value="Tosa">Tosa <input type="checkbox" name="servico[]" value="Corte de Unhas">Corte de Unhas <input type="checkbox" name="vacinado" value="true">Vacina <input type='hidden' name='petEncontrado' value='${petsEncontrados[0].nome}' /><input type='submit' value='Registrar'/></form></p>`
+            `<a href='/'>Home</a> | <a href='/pets'>Lista pets</a> | <a href='/pets/adicionar'>Adicionar Pet</a> | <a href='/pets/buscapets'>Buscar pets</a><p>Encontramos ${petsEncontrados.length} pets com o nome ${nomePet}</p><p>Nome: ${nomePet}</p><p>Idade:${petsEncontrados[0].idade}</p><p>Vacinado: ${petsEncontrados[0].vacinado == true ? 'S' : 'N' }</p><p>Servicos: ${petsEncontrados[0].servicos}</p><h1>**Servicos disponiveis**</h1><p><form method='GET' action='/pets/servicos'><input type="checkbox" name="servico[]" value="Banho">Banho <input type="checkbox" name="servico[]" value="Tosa">Tosa <input type="checkbox" name="servico[]" value="Corte de Unhas">Corte de Unhas <input type='hidden' name='petEncontrado' value='${petsEncontrados[0].nome}' /><input type="checkbox" name="vacinado" value="true">Vacina <input type='submit' value='Registrar'/></form></p>`
           );
         } else {
           res.write("Ops, nenhum pet cadastrado com esse nome!");
@@ -65,8 +65,9 @@ const server = http.createServer((req, res)=> {
           let obj = Object.values(json)
           let petEncontr = petshop.buscarPet(queryString.petEncontrado)
           console.log(obj)
-          petshop.atenderPet(petEncontr[0], obj)
-          res.write("Sucesso! - <a href='/pets'>Listar pets</a></p> |" + obj);
+          let retorno = petshop.atenderPet(petEncontr[0], obj)
+          
+          res.write(retorno);
             break;
 
         default:
